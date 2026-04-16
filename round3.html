@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Round 3 — Behavioural Interview · TechCorp{% endblock %}
+
+{% block content %}
+
+<div class="steps">
+  <div class="step done"><div class="step-circle">✓</div><div class="step-label">Screening</div></div>
+  <div class="step done"><div class="step-circle">✓</div><div class="step-label">Technical</div></div>
+  <div class="step active"><div class="step-circle">3</div><div class="step-label">Behavioural</div></div>
+  <div class="step"><div class="step-circle">4</div><div class="step-label">HR & Offer</div></div>
+</div>
+
+<div id="setupPanel">
+  <div style="max-width:680px; margin:0 auto;">
+    <div style="margin-bottom:24px;">
+      <span class="pill pill-amber">Round 3 of 4</span>
+      <h1 style="margin-top:10px; margin-bottom:6px;">Behavioural Interview</h1>
+      <p>You'll be speaking with <strong style="color:var(--text);">Meera</strong>, our People & Culture Lead. This is a values and teamwork focused conversation — be genuine and specific.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <h3 style="margin-bottom:16px;">Enter your Candidate ID</h3>
+      <div>
+        <label>Candidate ID</label>
+        <input class="input" id="candidateIdInput" type="text" placeholder="e.g. A3F7K2">
+        <p style="font-size:0.8rem; margin-top:6px; color:var(--text3);">Notes from Round 1 and Round 2 will be reviewed before this session.</p>
+      </div>
+      <input type="hidden" id="jdInput" value="">
+      <input type="hidden" id="resumeInput" value="">
+      <input type="hidden" id="nameInput" value="">
+    </div>
+
+    <div class="card card-sm" style="margin-bottom:20px;">
+      <div style="font-size:0.83rem; font-weight:500; color:var(--text2); margin-bottom:6px;">Interviewer Voice</div>
+      <div class="voice-toggle">
+        <button class="voice-btn active" id="voiceFemale">👩 Sarah (Female)</button>
+        <button class="voice-btn" id="voiceMale">👨 James (Male)</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="startBtn" style="width:100%; justify-content:center; padding:14px;">
+      Begin Behavioural Round →
+    </button>
+  </div>
+</div>
+
+<div id="interviewPanel" style="display:none;">
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div>
+      <div id="videoContainer" style="margin-bottom:14px;">
+        <div class="rec-badge" id="recBadge"><div class="rec-dot"></div> Recording</div>
+        <video id="videoPreview" autoplay muted playsinline></video>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot ready" id="statusDot"></div>
+        <span id="statusText">Ready</span>
+      </div>
+      <div style="display:none; align-items:center; gap:8px; margin-top:12px;" id="cidRow">
+        <span style="font-size:0.78rem; color:var(--text2);">Candidate ID:</span>
+        <div class="cid-badge" id="cidDisplay">—</div>
+      </div>
+    </div>
+    <div>
+      <div class="interviewer-info">
+        <div class="avatar avatar-female" id="interviewerAvatar">👩</div>
+        <div>
+          <div class="interviewer-name" id="interviewerName">Meera</div>
+          <div class="interviewer-role" id="interviewerRole">People & Culture Lead · TechCorp</div>
+        </div>
+        <div style="margin-left:auto;">
+          <div class="voice-toggle">
+            <button class="voice-btn active" id="voiceFemale">👩</button>
+            <button class="voice-btn" id="voiceMale">👨</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-box" id="chatBox"></div>
+    </div>
+  </div>
+
+  <div class="report-box" id="reportBox">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+      <h2>📋 Round 3 Behavioural Report</h2>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="downloadBtn" style="display:none; font-size:0.83rem;">↓ Download</button>
+        <a class="btn btn-success" id="nextRoundBtn" href="#" style="display:none; font-size:0.83rem;">Continue to Round 4 →</a>
+      </div>
+    </div>
+    <div class="report-content" id="reportContent">Generating report…</div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const session = new InterviewSession({
+    roundPrefix: '/round3',
+    interviewerName: 'Meera',
+    interviewerRole: 'People & Culture Lead · TechCorp',
+    avatarClass: 'avatar-female',
+    avatarEmoji: '👩'
+  });
+</script>
+{% endblock %}
