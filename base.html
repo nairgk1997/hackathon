@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}TechCorp Interview{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/base.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-logo">⬡ TechCorp Recruitment</div>
+    <div class="topbar-links">
+      <a href="/">Home</a>
+      <a href="/round1">Round 1</a>
+      <a href="/round2">Round 2</a>
+      <a href="/round3">Round 3</a>
+      <a href="/round4">Round 4</a>
+      <a href="/admin">Admin</a>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    {% block content %}{% endblock %}
+  </div>
+
+  <script src="/static/js/interview.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
