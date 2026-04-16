@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}TechCorp — AI Interview Platform{% endblock %}
+
+{% block content %}
+<div style="text-align:center; max-width:680px; margin:60px auto 40px;">
+  <div style="font-size:3rem; margin-bottom:16px;">⬡</div>
+  <h1 style="font-size:2.2rem; margin-bottom:12px;">TechCorp Interview Platform</h1>
+  <p style="font-size:1.05rem; color:var(--text2); margin-bottom:40px; line-height:1.7;">
+    A professional AI-powered recruitment pipeline. Four intelligent interview agents — each specialised, each building on the last.
+  </p>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; max-width:900px; margin:0 auto 60px;">
+
+  <a href="/round1" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:border-color 0.2s; border-color:transparent;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='transparent'">
+      <div style="font-size:2rem; margin-bottom:12px;">👋</div>
+      <div class="pill pill-blue" style="margin-bottom:10px;">Round 1</div>
+      <h3 style="margin-bottom:6px;">Introductory Screening</h3>
+      <p style="font-size:0.85rem;">Meet Priya, our Talent Specialist. She'll introduce TechCorp, explain the role, and get to know you.</p>
+      <div style="margin-top:14px; font-size:0.8rem; color:var(--text3);">~20 minutes · Priya (TA)</div>
+    </div>
+  </a>
+
+  <a href="/round2" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:border-color 0.2s; border-color:transparent;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='transparent'">
+      <div style="font-size:2rem; margin-bottom:12px;">💻</div>
+      <div class="pill pill-purple" style="margin-bottom:10px;">Round 2</div>
+      <h3 style="margin-bottom:6px;">Technical Interview</h3>
+      <p style="font-size:0.85rem;">Deep dive with Arjun, Senior Engineer. Concepts, system design, coding problems, and trade-offs.</p>
+      <div style="margin-top:14px; font-size:0.8rem; color:var(--text3);">~45 minutes · Arjun (Eng)</div>
+    </div>
+  </a>
+
+  <a href="/round3" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:border-color 0.2s; border-color:transparent;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='transparent'">
+      <div style="font-size:2rem; margin-bottom:12px;">🤝</div>
+      <div class="pill pill-amber" style="margin-bottom:10px;">Round 3</div>
+      <h3 style="margin-bottom:6px;">Behavioural Interview</h3>
+      <p style="font-size:0.85rem;">Meera from People & Culture explores how you work, collaborate, and handle real-world situations.</p>
+      <div style="margin-top:14px; font-size:0.8rem; color:var(--text3);">~40 minutes · Meera (P&C)</div>
+    </div>
+  </a>
+
+  <a href="/round4" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:border-color 0.2s; border-color:transparent;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='transparent'">
+      <div style="font-size:2rem; margin-bottom:12px;">🎉</div>
+      <div class="pill pill-green" style="margin-bottom:10px;">Round 4</div>
+      <h3 style="margin-bottom:6px;">HR & Offer Discussion</h3>
+      <p style="font-size:0.85rem;">Rajesh, our Head of HR, will discuss compensation, benefits, offer details, and next steps.</p>
+      <div style="margin-top:14px; font-size:0.8rem; color:var(--text3);">~30 minutes · Rajesh (HR)</div>
+    </div>
+  </a>
+
+</div>
+
+<div class="card" style="max-width:640px; margin:0 auto;">
+  <h3 style="margin-bottom:6px;">Before you begin</h3>
+  <p style="font-size:0.88rem; line-height:1.8; color:var(--text2);">
+    ✓ Ensure you are in a quiet, well-lit environment.<br>
+    ✓ Your camera and microphone must be enabled.<br>
+    ✓ Use Chrome or Edge for best compatibility.<br>
+    ✓ Complete rounds in order — each interviewer reviews notes from the previous round.<br>
+    ✓ Your <strong>Candidate ID</strong> is generated in Round 1. Keep it safe to continue in subsequent rounds.
+  </p>
+</div>
+
+{% endblock %}
