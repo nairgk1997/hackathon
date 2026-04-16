@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Round 1 — Introductory Screening · TechCorp{% endblock %}
+
+{% block content %}
+
+<!-- Progress -->
+<div class="steps">
+  <div class="step active">
+    <div class="step-circle">1</div>
+    <div class="step-label">Screening</div>
+  </div>
+  <div class="step">
+    <div class="step-circle">2</div>
+    <div class="step-label">Technical</div>
+  </div>
+  <div class="step">
+    <div class="step-circle">3</div>
+    <div class="step-label">Behavioural</div>
+  </div>
+  <div class="step">
+    <div class="step-circle">4</div>
+    <div class="step-label">HR & Offer</div>
+  </div>
+</div>
+
+<!-- SETUP PANEL -->
+<div id="setupPanel">
+  <div style="max-width:680px; margin:0 auto;">
+    <div style="margin-bottom:24px;">
+      <span class="pill pill-blue">Round 1 of 4</span>
+      <h1 style="margin-top:10px; margin-bottom:6px;">Introductory Screening</h1>
+      <p>You'll be speaking with <strong style="color:var(--text);">Priya</strong>, our Talent Acquisition Specialist. This session covers your background, the role, and TechCorp as a company.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <h3 style="margin-bottom:16px;">Tell us about yourself</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+        <div>
+          <label>Your Full Name</label>
+          <input class="input" id="nameInput" type="text" placeholder="e.g. Rahul Sharma">
+        </div>
+        <div>
+          <label>Candidate ID <span style="color:var(--text3); font-weight:400;">(leave blank if new)</span></label>
+          <input class="input" id="candidateIdInput" type="text" placeholder="Auto-generated">
+        </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label>Job Description / Role you're applying for</label>
+        <textarea class="textarea" id="jdInput" placeholder="Paste the job description or role title e.g. Senior Backend Engineer — Python, AWS, Microservices..."></textarea>
+      </div>
+      <div>
+        <label>Your Resume Summary</label>
+        <textarea class="textarea" id="resumeInput" placeholder="Paste a brief resume summary — years of experience, skills, current role, key projects..."></textarea>
+      </div>
+    </div>
+
+    <div class="card card-sm" style="margin-bottom:20px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:0.83rem; font-weight:500; color:var(--text2); margin-bottom:6px;">Interviewer Voice</div>
+          <div class="voice-toggle">
+            <button class="voice-btn active" id="voiceFemale">👩 Sarah (Female)</button>
+            <button class="voice-btn" id="voiceMale">👨 James (Male)</button>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--text3);">
+          <span>🔒</span> Session is proctored
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="startBtn" style="width:100%; justify-content:center; padding:14px;">
+      Begin Interview →
+    </button>
+  </div>
+</div>
+
+<!-- INTERVIEW PANEL -->
+<div id="interviewPanel" style="display:none;">
+  <div class="grid-2" style="margin-bottom:20px;">
+    <!-- Left: Video -->
+    <div>
+      <div id="videoContainer" style="margin-bottom:14px;">
+        <div class="rec-badge" id="recBadge"><div class="rec-dot"></div> Recording</div>
+        <video id="videoPreview" autoplay muted playsinline></video>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot ready" id="statusDot"></div>
+        <span id="statusText">Ready</span>
+      </div>
+      <div style="display:none; align-items:center; gap:8px; margin-top:12px;" id="cidRow">
+        <span style="font-size:0.78rem; color:var(--text2);">Your Candidate ID:</span>
+        <div class="cid-badge" id="cidDisplay">—</div>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('cidDisplay').textContent)" class="btn btn-ghost" style="padding:5px 12px; font-size:0.78rem;">Copy</button>
+      </div>
+    </div>
+
+    <!-- Right: Chat + Interviewer -->
+    <div>
+      <div class="interviewer-info">
+        <div class="avatar avatar-female" id="interviewerAvatar">👩</div>
+        <div>
+          <div class="interviewer-name" id="interviewerName">Priya</div>
+          <div class="interviewer-role" id="interviewerRole">Talent Acquisition Specialist · TechCorp</div>
+        </div>
+        <div style="margin-left:auto;">
+          <div class="voice-toggle">
+            <button class="voice-btn active" id="voiceFemale">👩</button>
+            <button class="voice-btn" id="voiceMale">👨</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-box" id="chatBox"></div>
+    </div>
+  </div>
+
+  <!-- Report -->
+  <div class="report-box" id="reportBox">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+      <h2>📋 Round 1 Interview Report</h2>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="downloadBtn" style="display:none; font-size:0.83rem;">↓ Download</button>
+        <a class="btn btn-success" id="nextRoundBtn" href="#" style="display:none; font-size:0.83rem;">Continue to Round 2 →</a>
+      </div>
+    </div>
+    <div class="report-content" id="reportContent">Generating your report, please wait…</div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const session = new InterviewSession({
+    roundPrefix: '/round1',
+    interviewerName: 'Priya',
+    interviewerRole: 'Talent Acquisition Specialist · TechCorp',
+    avatarClass: 'avatar-female',
+    avatarEmoji: '👩'
+  });
+</script>
+{% endblock %}
