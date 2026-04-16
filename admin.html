@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard · TechCorp Recruitment{% endblock %}
+
+{% block content %}
+
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px;">
+  <div>
+    <h1>Admin Dashboard</h1>
+    <p>All candidates and interview reports across all four rounds.</p>
+  </div>
+  <button class="btn btn-ghost" onclick="loadCandidates()">↻ Refresh</button>
+</div>
+
+<!-- Stats row -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:28px;" id="statsRow">
+  <div class="card card-sm" style="text-align:center;">
+    <div style="font-size:1.8rem; font-weight:800; color:var(--accent);" id="statTotal">—</div>
+    <div style="font-size:0.8rem; color:var(--text2); margin-top:4px;">Total Candidates</div>
+  </div>
+  <div class="card card-sm" style="text-align:center;">
+    <div style="font-size:1.8rem; font-weight:800; color:var(--warning);" id="statInProgress">—</div>
+    <div style="font-size:0.8rem; color:var(--text2); margin-top:4px;">In Progress</div>
+  </div>
+  <div class="card card-sm" style="text-align:center;">
+    <div style="font-size:1.8rem; font-weight:800; color:var(--success);" id="statCompleted">—</div>
+    <div style="font-size:0.8rem; color:var(--text2); margin-top:4px;">Completed All Rounds</div>
+  </div>
+  <div class="card card-sm" style="text-align:center;">
+    <div style="font-size:1.8rem; font-weight:800; color:var(--accent2);" id="statRound1">—</div>
+    <div style="font-size:0.8rem; color:var(--text2); margin-top:4px;">Round 1 Done</div>
+  </div>
+</div>
+
+<!-- Candidate table -->
+<div class="card" style="padding:0; overflow:hidden;">
+  <div style="padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+    <h3>All Candidates</h3>
+    <input class="input" id="searchInput" type="text" placeholder="Search by ID or name…" style="width:220px;">
+  </div>
+  <div id="candidateTable" style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+      <thead>
+        <tr style="background:var(--surface2);">
+          <th style="padding:12px 20px; text-align:left; color:var(--text2); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">Candidate ID</th>
+          <th style="padding:12px 20px; text-align:left; color:var(--text2); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">Name</th>
+          <th style="padding:12px 20px; text-align:left; color:var(--text2); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">Status</th>
+          <th style="padding:12px 20px; text-align:left; color:var(--text2); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">Rounds</th>
+          <th style="padding:12px 20px; text-align:left; color:var(--text2); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">Created</th>
+          <th style="padding:12px 20px; text-align:left; color:var(--text2); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="candidateRows">
+        <tr><td colspan="6" style="padding:40px; text-align:center; color:var(--text3);">Loading candidates…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detailPanel" style="display:none; margin-top:24px;">
+  <div class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+      <h2 id="detailTitle">Candidate Detail</h2>
+      <button class="btn btn-ghost" onclick="document.getElementById('detailPanel').style.display='none'" style="font-size:0.82rem;">✕ Close</button>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:20px;" id="roundTabs"></div>
+
+    <!-- Tab content -->
+    <div id="roundContent"></div>
+  </div>
+</div>
+
+<style>
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: 14px 20px; vertical-align: middle; }
+
+  .tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    font-size: 0.88rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn:hover { color: var(--text); }
+</style>
+
+<script>
+  let allCandidates = {};
+
+  const STATUS_LABELS = {
+    'round1_in_progress': { label: 'Round 1 — In Progress', cls: 'pill-amber' },
+    'round1_complete':    { label: 'Round 1 — Complete',    cls: 'pill-blue' },
+    'round2_in_progress': { label: 'Round 2 — In Progress', cls: 'pill-amber' },
+    'round2_complete':    { label: 'Round 2 — Complete',    cls: 'pill-blue' },
+    'round3_in_progress': { label: 'Round 3 — In Progress', cls: 'pill-amber' },
+    'round3_complete':    { label: 'Round 3 — Complete',    cls: 'pill-blue' },
+    'round4_in_progress': { label: 'Round 4 — In Progress', cls: 'pill-amber' },
+    'completed':          { label: '✓ All Rounds Complete', cls: 'pill-green' },
+  };
+
+  const ROUND_NAMES = {
+    round1: '👋 Screening',
+    round2: '💻 Technical',
+    round3: '🤝 Behavioural',
+    round4: '🎉 HR & Offer'
+  };
+
+  async function loadCandidates() {
+    const res = await fetch('/admin/candidates');
+    allCandidates = await res.json();
+    renderTable(allCandidates);
+    renderStats(allCandidates);
+  }
+
+  function renderStats(candidates) {
+    const list = Object.values(candidates);
+    document.getElementById('statTotal').textContent = list.length;
+    document.getElementById('statInProgress').textContent = list.filter(c => c.status && c.status.includes('in_progress')).length;
+    document.getElementById('statCompleted').textContent = list.filter(c => c.status === 'completed').length;
+    document.getElementById('statRound1').textContent = list.filter(c => c.status && c.status.includes('round1')).length;
+  }
+
+  function renderTable(candidates) {
+    const tbody = document.getElementById('candidateRows');
+    const list = Object.values(candidates);
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:40px; text-align:center; color:var(--text3);">No candidates yet. Start an interview to see data here.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(c => {
+      const s = STATUS_LABELS[c.status] || { label: c.status || 'Unknown', cls: 'pill-blue' };
+      const rounds = c.rounds || {};
+      const roundDots = ['round1','round2','round3','round4'].map(r =>
+        `<span title="${ROUND_NAMES[r]}" style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${rounds[r] ? 'var(--success)' : 'var(--surface2)'}; border:1px solid ${rounds[r] ? 'var(--success)' : 'var(--border)'}; margin-right:3px;"></span>`
+      ).join('');
+
+      const date = c.created_at ? new Date(c.created_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+
+      return `<tr>
+        <td><span class="cid-badge">${c.id}</span></td>
+        <td style="font-weight:500;">${c.name || '—'}</td>
+        <td><span class="pill ${s.cls}">${s.label}</span></td>
+        <td>${roundDots}</td>
+        <td style="color:var(--text2);">${date}</td>
+        <td><button class="btn btn-ghost" onclick="showDetail('${c.id}')" style="font-size:0.8rem; padding:6px 14px;">View</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function showDetail(cid) {
+    const res = await fetch(`/admin/candidate/${cid}`);
+    const c = await res.json();
+    const rounds = c.rounds || {};
+
+    document.getElementById('detailTitle').textContent = `${c.name || 'Candidate'} — ${c.id}`;
+    document.getElementById('detailPanel').style.display = 'block';
+
+    const tabsEl = document.getElementById('roundTabs');
+    const contentEl = document.getElementById('roundContent');
+
+    const roundKeys = Object.keys(rounds);
+    if (roundKeys.length === 0) {
+      tabsEl.innerHTML = '';
+      contentEl.innerHTML = '<p style="color:var(--text3); padding:20px 0;">No completed rounds yet.</p>';
+      document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    let activeTab = roundKeys[0];
+
+    function renderTab(key) {
+      const r = rounds[key];
+      const date = r.completed_at ? new Date(r.completed_at).toLocaleString('en-IN') : '—';
+      const flags = (r.behavior_logs || []).filter(l => l.includes('[FLAG]'));
+      return `
+        <div style="display:flex; gap:20px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
+          <div style="font-size:0.82rem; color:var(--text2);">Completed: <strong style="color:var(--text)">${date}</strong></div>
+          ${flags.length > 0 ? `<span class="pill pill-red">⚠ ${flags.length} behavior flag${flags.length>1?'s':''}</span>` : '<span class="pill pill-green">✓ No flags</span>'}
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="margin-bottom:10px; font-size:0.9rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.05em;">Report</h3>
+          <div style="background:var(--surface2); border-radius:10px; padding:20px; white-space:pre-wrap; font-size:0.87rem; color:var(--text2); line-height:1.7; max-height:400px; overflow-y:auto;">${r.report || 'No report generated.'}</div>
+        </div>
+        ${flags.length > 0 ? `
+        <div>
+          <h3 style="margin-bottom:10px; font-size:0.9rem; color:var(--danger); text-transform:uppercase; letter-spacing:0.05em;">⚠ Behavior Flags</h3>
+          <div style="background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.2); border-radius:10px; padding:16px;">
+            ${flags.map(f => `<div style="font-size:0.83rem; color:var(--text2); padding:4px 0; border-bottom:1px solid rgba(239,68,68,0.1);">${f}</div>`).join('')}
+          </div>
+        </div>` : ''}
+      `;
+    }
+
+    tabsEl.innerHTML = roundKeys.map(k =>
+      `<button class="tab-btn ${k === activeTab ? 'active' : ''}" onclick="switchTab('${k}', this)">${ROUND_NAMES[k] || k}</button>`
+    ).join('');
+
+    contentEl.innerHTML = renderTab(activeTab);
+    document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth' });
+
+    window.switchTab = function(key, btn) {
+      activeTab = key;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      contentEl.innerHTML = renderTab(key);
+    };
+  }
+
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    const filtered = {};
+    Object.entries(allCandidates).forEach(([k, v]) => {
+      if (k.toLowerCase().includes(q) || (v.name || '').toLowerCase().includes(q)) {
+        filtered[k] = v;
+      }
+    });
+    renderTable(filtered);
+  });
+
+  loadCandidates();
+</script>
+
+{% endblock %}
