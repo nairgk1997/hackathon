@@ -389,6 +389,51 @@ def get_system_prompt_by_domain(domain: str) -> str:
 
 # --- SERVER RUNNER ---
 
+
+
+----------------------------model improvement---------------------
+1.initially a manager logs in he can have a provision to create a job description
+
+
+So here we have introduced llm os that it will ask specific set of questions regarding the input role he have given.
+It is a audio based questions only so that he can answer and the model gives a proper jd
+Then there is one more tab where the saved jd he can use to compare various resumes.
+Here the comparison is done using cosine similarity and top 5 results will come and then those will be given to LLM
+For LLM we have given specific amount of system prompts of roles like computer science mechanical electrical, so that with fastmcp it will have one intent to select system prompt
+Then based on that we will get the vector match and Llm match so that we can see the score.
+
+** so now what we are using is we have a 10$ api key purchased for a 3 day development and demo purpose. We are using get-4o mini
+
+** so for video interview and other things we are using that thing only .
+
+** so for now my doubt is can I choose some other best model apart from this and should be more expensive just somewhat expensive than this. Also it should be best for this use case. 
+
+** is there any openAI model available like that
+
+
+-------response-----------
+That architecture sounds incredibly solid! Using fastMCP to route intents to specific system prompts and combining cosine similarity with an LLM score is a brilliant approach to recruitment process automation. 
+
+Since you are relying heavily on audio-based questions and video interviews, and you need a model that is a clear step up in quality while remaining manageable for a $10 demo budget, here are the best OpenAI models for your specific use case:
+
+### 1. The Best All-Rounder for Audio & Video: **GPT-4o**
+This is OpenAI's flagship omni-model and the direct upgrade to the mini version you are currently using. 
+* **Why it's perfect for your use case:** The "o" stands for omni. It is natively built from the ground up to process audio and visual inputs. For your video interviews and audio-based JD questions, GPT-4o will capture nuance, tone, and visual context with much higher fidelity than `gpt-4o-mini`. It also has superior context understanding, meaning your LLM resume match scores will be much more accurate.
+* **The Cost:** At **$2.50 per 1M input tokens** and **$10.00 per 1M output tokens**, it is noticeably more expensive than `gpt-4o-mini`. However, for a 3-day demo, a $10 API limit is still plenty of runway to run high-quality video interviews and process resumes, provided you aren't doing massive bulk processing.
+
+### 2. The Best for Backend Resume Scoring: **o3-mini**
+If you want to get highly analytical with how you score the top 5 resume matches, OpenAI's newer reasoning models are incredibly powerful.
+* **Why it's perfect for your use case:** While it doesn't handle native audio/video streams like GPT-4o, `o3-mini` is an absolute powerhouse for logic and reasoning. It is ideal for the specific task of evaluating complex resumes against your technical system prompts (like computer science vs. mechanical engineering) and returning a highly accurate match score.
+* **The Cost:** At **$1.10 per 1M input tokens** and **$4.40 per 1M output tokens**, it sits perfectly in the middle. It's a great "somewhat more expensive" option that delivers a massive boost in reasoning capability.
+
+### The "Smart Demo" Strategy
+To get the absolute most out of your $10 API limit without sacrificing the "wow" factor for your demo, I highly recommend a hybrid routing approach:
+* **Use `gpt-4o`** for the front-end user experience: the live video interviews and the audio-based JD generation. 
+* **Use `o3-mini`** for the heavy-lifting logic: scoring the top 5 vector matches.
+* **Keep `gpt-4o-mini`** for simple background tasks: routing the fastMCP intents or formatting the saved text. 
+
+How are you currently passing the video feed to the model during the interview—are you capturing individual frames at specific intervals, or are you utilizing a direct stream?
+
 if __name__ == "__main__":
     # Running the MCP server
     mcp.run()
