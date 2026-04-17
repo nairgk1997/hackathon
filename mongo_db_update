@@ -1,0 +1,222 @@
+def seed_database():
+    dao = MongoDAO(uri=MONGO_URI, db_name="techcorp_erp")
+    
+    # 1. Seed Finance Collection (Budgetary Constraints for the Router)
+    dao.finance_col.delete_many({}) # Optional: Clear existing to avoid duplicates
+    dao.finance_col.insert_many([
+        {"department": "Engineering", "budget_available": True, "max_ctc_lakhs": 35},
+        {"department": "Finance", "budget_available": True, "max_ctc_lakhs": 25},
+        {"department": "HR", "budget_available": True, "max_ctc_lakhs": 28},
+        {"department": "Consulting", "budget_available": True, "max_ctc_lakhs": 32},
+        {"department": "Marketing", "budget_available": False, "max_ctc_lakhs": 0}
+    ])
+    
+    # 2. Comprehensive Employee List (E101 - E136)
+    employees = [
+        # --- ORIGINAL & AVIATION COHORT ---
+        {
+            "employee_id": "E101", "name": "Rahul T.", "department": "Engineering", 
+            "role": "Backend Dev", "status": "on_bench",
+            "resume_text": "Experienced Python developer specializing in Flask, React, and SQL database management. Previous project involved building high-throughput APIs."
+        },
+        {
+            "employee_id": "E102", "name": "Arnav Deshpande", "department": "Engineering",
+            "role": "Principal Engineer | Systems & Infrastructure Architect", "status": "active",
+            "resume_text": "Infrastructure Architect with 8+ years experience in NestJS, FastAPI, and GCP DevOps for safety-critical aviation logistics. Specialized in scaling mission-critical production environments with 99.99% reliability."
+        },
+        {
+            "employee_id": "E103", "name": "Sanjana Reddy", "department": "Engineering",
+            "role": "Principal Engineer | AI Integration & Product Strategist", "status": "active",
+            "resume_text": "AI/ML Integration expert specializing in LLMs, RAG, and Python. Focused on automating maintenance logs and regulatory compliance. Strong background in digital transformation for aerospace."
+        },
+        {
+            "employee_id": "E104", "name": "Vikram Malhotra", "department": "Engineering",
+            "role": "Principal Engineer | Solutions Architect & Technical Authority", "status": "active",
+            "resume_text": "Solutions Architect and Technical Closer with expertise in React, Python, and high-stakes client engagement. Proven ability to translate engineering capabilities into ROI value propositions."
+        },
+        {
+            "employee_id": "E105", "name": "Priya Sharma", "department": "Engineering",
+            "role": "Principal Engineer | Startup Scaling & Crew Builder", "status": "active",
+            "resume_text": "Technical leader specializing in building engineering teams from scratch. Expert in hiring, mentorship, vendor management, and agile methodology. Focus on zero-to-one startup scaling."
+        },
+        {
+            "employee_id": "E106", "name": "Rohan Iyer", "department": "Engineering",
+            "role": "Principal Engineer | Safety-Critical Systems Expert", "status": "active",
+            "resume_text": "10+ years experience in safety-critical code and aviation compliance. Specialist in NestJS, cloud infrastructure, and global fleet asset management. Expert in aviation regulatory tech."
+        },
+
+        # --- AUTOMOTIVE & HV ELECTRONICS COHORT ---
+        {
+            "employee_id": "E107", "name": "Vikram Siddharth", "department": "Engineering",
+            "role": "Hardware Engineering Lead | HV Power Electronics Specialist", "status": "active",
+            "resume_text": "12 years experience in automotive HV components: DC-DC converters, OBC, and BDU. Expert in 400V/800V system validation and technical OEM alignment. Specialist in thermal efficiency."
+        },
+        {
+            "employee_id": "E108", "name": "Ananya Rao", "department": "Engineering",
+            "role": "System Engineering Leader | Functional Safety & Architecture", "status": "active",
+            "resume_text": "11 years expertise in ISO 26262 functional safety and ASIL-D compliance. Specialist in BMS/MCU system architecture, PDD documentation, and architecture requirements allocation."
+        },
+        {
+            "employee_id": "E109", "name": "Karthik Balan", "department": "Engineering",
+            "role": "Hardware Engineering Leader | Embedded Hardware & MCU Expert", "status": "active",
+            "resume_text": "13 years experience in embedded schematic design (Altium/Cadence) and MCU selection for BCMs. Expert in PCB/PCBA supplier management, prototyping, and network diagnostics."
+        },
+        {
+            "employee_id": "E110", "name": "Priyanka Das", "department": "Engineering",
+            "role": "Engineering Leader | Full-Lifecycle Product Development", "status": "active",
+            "resume_text": "10 years experience in full product lifecycle from concept to validation for LV/HV electrical centers. Specialist in hardware/software partitioning for MCU-based controls and hybrid platforms."
+        },
+        {
+            "employee_id": "E111", "name": "Suresh Menon", "department": "Engineering",
+            "role": "System Engineering Leader | OEM Strategy & Technical Window", "status": "active",
+            "resume_text": "14+ years experience as primary technical interface for global OEMs. Expert in requirement analysis (DOORS), change request management, and system design platforms."
+        },
+
+        # --- FINANCE & RTR COHORT ---
+        {
+            "employee_id": "E112", "name": "Arjun Kulkarni", "department": "Finance",
+            "role": "Finance Specialist | Qualified Accountant (ACCA)", "status": "active",
+            "resume_text": "Qualified ACCA with 5 years experience in RtR accounting and IFRS financial statement preparation. Expert in S/4 Hana, audit coordination, and month-end closing."
+        },
+        {
+            "employee_id": "E113", "name": "Priyanka Murthy", "department": "Finance",
+            "role": "RtR Accountant | Digitalization & ERP Specialist", "status": "active",
+            "resume_text": "Finance professional focused on digitalization and automation via S/4 Hana. Expert in SAP FICO, Power BI, and VBA/Macros for workflow optimization and migration projects."
+        },
+        {
+            "employee_id": "E114", "name": "Vikram Santhanam", "department": "Finance",
+            "role": "RtR Operations Lead | Shared Services Expert", "status": "active",
+            "resume_text": "6+ years in Shared Service Center (SSC) operations for APAC. Expert in managing month-end closing for 40+ units. Skilled in IFRS compliance and JIRA for Finance."
+        },
+        {
+            "employee_id": "E115", "name": "Sneha Ramachandran", "department": "Finance",
+            "role": "Finance Specialist | Compliance & Reporting", "status": "active",
+            "resume_text": "Reporting accountant specializing in IFRS individual financial statements and internal controls. CA Inter background with expertise in intercompany reconciliation and group accounting quality."
+        },
+        {
+            "employee_id": "E116", "name": "Karthik Venkat", "department": "Finance",
+            "role": "RtR Process Lead | Transformation & Excellence", "status": "active",
+            "resume_text": "Certified Accountant (ICWA/CMA) with 7 years in RtR process transformation. Specialist in Lean accounting, technical project management, and system interface optimization."
+        },
+
+        # --- CLOUD & BANKING COHORT ---
+        {
+            "employee_id": "E117", "name": "Kavita Rao", "department": "Engineering",
+            "role": "Full Stack Engineer (Cloud & Infrastructure)", "status": "active",
+            "resume_text": "Cloud-native developer specializing in OpenShift, Kubernetes, and GitLab CI/CD. Expert in ELK Stack for observability and infrastructure-as-code for banking applications."
+        },
+        {
+            "employee_id": "E118", "name": "Priya Nair", "department": "Engineering",
+            "role": "Full Stack Engineer (Micro Frontend & React)", "status": "active",
+            "resume_text": "Frontend architect specializing in Micro Frontend architecture using React and Angular. Expert in modular, high-performance UI integration with Spring Boot backends."
+        },
+        {
+            "employee_id": "E119", "name": "Arjun Mehta", "department": "Engineering",
+            "role": "Senior Full Stack Engineer (Java & Microservices)", "status": "active",
+            "resume_text": "Senior Java Developer (Java 17) with 7 years experience in scalable microservices and Spring Boot. Expert in high-frequency financial transactions and Oracle SQL optimization."
+        },
+        {
+            "employee_id": "E120", "name": "Siddharth Goel", "department": "Engineering",
+            "role": "Full Stack Engineer (Secure Coding & QA)", "status": "active",
+            "resume_text": "Security-focused engineer specializing in the secure development life cycle (SDLC). Expert in Veracode, Prisma, and SonarQube for vulnerability mitigation and compliance."
+        },
+        {
+            "employee_id": "E121", "name": "Vikram Deshmukh", "department": "Engineering",
+            "role": "Lead Full Stack Engineer (Tech Excellence)", "status": "active",
+            "resume_text": "Technical lead focused on full-stack architecture and team mentoring. Expert in change management, risk control, and strategic alignment for enterprise finance solutions."
+        },
+
+        # --- HR & SITE OPERATIONS COHORT ---
+        {
+            "employee_id": "E122", "name": "Arjun Varma", "department": "HR",
+            "role": "Senior HR Advisor - Industrial Relations & Compliance", "status": "active",
+            "resume_text": "7+ years experience in MNC manufacturing. Expert in IR, India Labor Laws, union negotiations, and statutory compliance (Factories Act, ESI, PF). Proficient in SAP HR."
+        },
+        {
+            "employee_id": "E123", "name": "Sowmya Reddy", "department": "HR",
+            "role": "HR Advisor - Talent Management & Engagement", "status": "active",
+            "resume_text": "6 years experience in talent development and culture. Specialist in competency mapping, IDP facilitation, and SuccessFactors for site-wide performance management."
+        },
+        {
+            "employee_id": "E124", "name": "Karthik Mani", "department": "HR",
+            "role": "HR Advisor - Operations & HRIS Specialist", "status": "active",
+            "resume_text": "HRIS expert (SuccessFactors/Workday) specializing in HR automation, payroll audits, labor cost budgeting, and headcount planning. Experience in zero-finding compliance audits."
+        },
+        {
+            "employee_id": "E125", "name": "Deepika Sharma", "department": "HR",
+            "role": "HR Business Partner - Site Operations", "status": "active",
+            "resume_text": "Strategic HR Advisor with 8 years in manufacturing. Expert in change management, headcount optimization, and inclusive culture programs for production scaling."
+        },
+        {
+            "employee_id": "E126", "name": "Rohan Deshmukh", "department": "HR",
+            "role": "Senior HR Generalist - Manufacturing Site Management", "status": "active",
+            "resume_text": "9+ years managing full employee life cycle in MNCs. Expert in site HR leadership (600+ employees), labor law, technical recruiting, and conflict management."
+        },
+
+        # --- CONSULTING & ESG COHORT ---
+        {
+            "employee_id": "E127", "name": "Aarav Mehta", "department": "Consulting",
+            "role": "Senior Associate | Sustainability & Climate Change", "status": "active",
+            "resume_text": "Sustainability consultant with 3 years in ESG strategy. Expert in decarbonization, Net Zero roadmapping, and carbon markets using the PwC Professional framework."
+        },
+        {
+            "employee_id": "E128", "name": "Sanya Gupta", "department": "Consulting",
+            "role": "Senior Associate | Energy Transition & Renewables", "status": "active",
+            "resume_text": "Energy consultant specializing in renewable energy policy and grid modernization. Expert in energy economics, Power BI, and regulatory compliance for power projects."
+        },
+        {
+            "employee_id": "E129", "name": "Ishaan Malhotra", "department": "Consulting",
+            "role": "Senior Associate | Management Consulting & Strategy", "status": "active",
+            "resume_text": "Strategy consultant focused on operational excellence and cost alignment. Expert in Lean Six Sigma and navigating risk complexity in financial services."
+        },
+        {
+            "employee_id": "E130", "name": "Riya Sharma", "department": "Consulting",
+            "role": "Senior Associate | Climate Risk & Data Analytics", "status": "active",
+            "resume_text": "Analytical consultant specializing in climate risk modeling and Python data analytics. Expert in quantitative risk assessment, Tableau, and SQL for environmental data."
+        },
+        {
+            "employee_id": "E131", "name": "Karthik Ram", "department": "Consulting",
+            "role": "Senior Associate | ESG Governance & Ethical Leadership", "status": "active",
+            "resume_text": "ESG Governance specialist expert in corporate ethics, GRC software, and aligning governance costs with business strategy. Experience in onsite facility audits."
+        },
+
+        # --- APPLICATION ENGINEERING TRAINEE COHORT ---
+        {
+            "employee_id": "E132", "name": "Arjun Patel", "department": "Engineering",
+            "role": "Application Engineering Trainee | CAD & PLM Specialist", "status": "active",
+            "resume_text": "Mechanical graduate proficient in Siemens NX, Solid Edge, and Teamcenter. Focused on 3D modeling, technical documentation, and PDM workflows for industrial projects."
+        },
+        {
+            "employee_id": "E133", "name": "Kavya Krishnan", "department": "Engineering",
+            "role": "Application Engineering Trainee | Simulation & CAE Analyst", "status": "active",
+            "resume_text": "Simulation specialist focusing on FEA/CFD via SIMCENTER and Altair portfolios. Expert in structural analysis, modal analysis, and digital design validation (PoC)."
+        },
+        {
+            "employee_id": "E134", "name": "Siddharth Rao", "department": "Engineering",
+            "role": "Application Engineering Trainee | CAM & Manufacturing Tech", "status": "active",
+            "resume_text": "Manufacturing engineer specializing in NX CAM and Bricsys. Expert in CNC toolpaths, G-Code optimization, and design-to-manufacturing troubleshooting."
+        },
+        {
+            "employee_id": "E135", "name": "Meghna Sundaram", "department": "Engineering",
+            "role": "Application Engineering Trainee | R&D and Reverse Engineering", "status": "active",
+            "resume_text": "R&D engineer specializing in Reverse Engineering from 3D scan data to parametric NX models. Focus on lightweighting, IIoT basics, and material application PoCs."
+        },
+        {
+            "employee_id": "E136", "name": "Rohit Varma", "department": "Engineering",
+            "role": "Application Engineering Trainee | Technical Support & Demos", "status": "active",
+            "resume_text": "Technical support specialist providing software demos and troubleshooting for Solid Edge, NX, and Bricsys. Experienced in managing customer-facing PoC workflows."
+        }
+    ]
+    
+    # 3. Vectorization & Bulk Insertion
+    dao.employee_col.delete_many({}) # Clear existing
+    for emp in employees:
+        # Generate the vector embedding using your RAG model
+        emp["resume_embedding"] = dao.embeddings.embed_query(emp["resume_text"])
+        
+    dao.employee_col.insert_many(employees)
+    print(f"Database Successfully Seeded.")
+    print(f"Total Departments: 4 | Total Records: {len(employees)}")
+
+if __name__ == "__main__":
+    seed_database()
