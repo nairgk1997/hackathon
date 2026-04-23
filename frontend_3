@@ -73,29 +73,29 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-purple-50 via-white to-emerald-50 font-sans text-purple-950 relative overflow-hidden flex flex-col selection:bg-emerald-100">
+    <div className="h-screen bg-gradient-to-br from-sky-50 via-white to-green-50 font-sans text-sky-950 relative overflow-hidden flex flex-col selection:bg-sky-200">
 
-      {/* Ambient glows — purple left, green right */}
-      <div className="absolute top-[-10%] left-[20%] w-[800px] h-[400px] bg-purple-300/20 rounded-full blur-[100px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[500px] bg-emerald-300/15 rounded-full blur-[120px] pointer-events-none"></div>
+      {/* Ambient glows — sky left, green right */}
+      <div className="absolute top-[-10%] left-[20%] w-[800px] h-[400px] bg-sky-300/20 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[500px] bg-green-300/15 rounded-full blur-[120px] pointer-events-none"></div>
 
       {/* Floating decorative shapes */}
-      <div className="absolute top-[15%] left-[5%] w-16 h-16 bg-purple-200/40 rounded-tr-full rounded-bl-full rotate-45 blur-[2px] pointer-events-none animate-pulse"></div>
-      <div className="absolute top-[40%] right-[8%] w-24 h-24 bg-emerald-200/30 rounded-tl-full rounded-br-full -rotate-12 blur-[4px] pointer-events-none"></div>
-      <div className="absolute bottom-[20%] left-[12%] w-20 h-20 bg-violet-200/35 rounded-tr-full rounded-bl-full rotate-[60deg] blur-[3px] pointer-events-none"></div>
+      <div className="absolute top-[15%] left-[5%] w-16 h-16 bg-sky-200/40 rounded-tr-full rounded-bl-full rotate-45 blur-[2px] pointer-events-none animate-pulse"></div>
+      <div className="absolute top-[40%] right-[8%] w-24 h-24 bg-green-200/30 rounded-tl-full rounded-br-full -rotate-12 blur-[4px] pointer-events-none"></div>
+      <div className="absolute bottom-[20%] left-[12%] w-20 h-20 bg-sky-200/35 rounded-tr-full rounded-bl-full rotate-[60deg] blur-[3px] pointer-events-none"></div>
 
       {/* Navigation Bar */}
       <nav className="shrink-0 flex items-center justify-between px-10 py-5 bg-transparent relative z-40">
         <div className="flex items-center gap-2.5">
-          <div className="bg-gradient-to-tr from-purple-700 to-emerald-500 p-2 rounded-xl shadow-lg shadow-purple-500/30">
+          <div className="bg-gradient-to-tr from-sky-500 to-green-500 p-2 rounded-xl shadow-lg shadow-sky-500/30">
             <Leaf size={22} className="text-white" />
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-purple-900">Hire AI</span>
+          <span className="text-xl font-extrabold tracking-tight text-sky-900">Hire AI</span>
         </div>
         <div>
           <button
             onClick={() => setIsLoginModalOpen(true)}
-            className="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-purple-700 to-emerald-500 rounded-full hover:from-purple-600 hover:to-emerald-400 shadow-md shadow-purple-600/25 hover:shadow-lg hover:shadow-purple-500/35 transition-all transform hover:-translate-y-0.5"
+            className="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-sky-500 to-green-500 rounded-full hover:from-sky-400 hover:to-green-400 shadow-md shadow-sky-500/25 hover:shadow-lg hover:shadow-sky-400/40 transition-all transform hover:-translate-y-0.5"
           >
             Login to Portal
           </button>
@@ -104,26 +104,27 @@ export default function Home() {
 
       {/* Hero Section */}
       <header className="shrink-0 max-w-5xl mx-auto text-center px-6 pt-6 pb-6 relative z-10 flex flex-col items-center justify-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-100/80 text-purple-700 text-xs font-bold mb-4 border border-purple-200 backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-100/80 text-sky-700 text-xs font-bold mb-4 border border-sky-200 backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
           </span>
           AI-Powered Hiring Platform
         </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-purple-950 mb-4 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-sky-950 mb-4 leading-tight">
           Hire Smarter. <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-violet-600 to-emerald-500">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-sky-400 to-green-500">
             Build Stronger Teams.
           </span>
         </h1>
-        <p className="text-base md:text-lg text-purple-700/70 max-w-2xl font-medium leading-relaxed">
+        <p className="text-base md:text-lg text-sky-700/70 max-w-2xl font-medium leading-relaxed">
           Automate interviews, screen resumes, and evaluate candidates in real time — so you can focus on the people worth hiring.
         </p>
       </header>
 
       {/* Services Grid Section */}
       <section className="flex-1 max-w-7xl w-full mx-auto px-8 pb-8 relative z-10 flex flex-col min-h-0">
+        {/* Grid - perfectly spaced to fill remaining height safely */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 min-h-0 place-items-stretch">
           {services.map((service, index) => {
             const IconComponent = service.icon;
@@ -131,15 +132,15 @@ export default function Home() {
               <div key={index} className="group relative h-full w-full [perspective:2000px] z-10 hover:z-50 cursor-pointer">
 
                 {/* Inside layer — revealed on hover */}
-                <div className="absolute inset-0 w-full h-full bg-white/95 backdrop-blur-xl rounded-3xl border border-purple-200 p-6 flex flex-col justify-center shadow-xl shadow-purple-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                  <h3 className="text-lg font-bold text-purple-900 mb-2 border-b border-emerald-100 pb-2">{service.title}</h3>
-                  <p className="text-purple-700/85 text-sm font-medium leading-relaxed mb-4">
+                <div className="absolute inset-0 w-full h-full bg-white/95 backdrop-blur-xl rounded-3xl border border-sky-200 p-6 flex flex-col justify-center shadow-xl shadow-sky-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                  <h3 className="text-lg font-bold text-sky-900 mb-2 border-b border-green-100 pb-2">{service.title}</h3>
+                  <p className="text-sky-700/85 text-sm font-medium leading-relaxed mb-4">
                     {service.description}
                   </p>
                   <ul className="space-y-2">
                     {service.features.map((feature, i) => (
-                      <li key={i} className="text-xs font-bold text-purple-800 flex items-center gap-2.5">
-                        <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                      <li key={i} className="text-xs font-bold text-sky-800 flex items-center gap-2.5">
+                        <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full bg-green-100 text-green-600">
                           <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                         </span>
                         {feature}
@@ -149,17 +150,17 @@ export default function Home() {
                 </div>
 
                 {/* Front cover layer */}
-                <div className="absolute inset-0 w-full h-full bg-white/60 backdrop-blur-md rounded-3xl border border-purple-200/80 p-6 flex flex-col items-center justify-center text-center origin-left transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] [transform-style:preserve-3d] group-hover:[transform:rotateY(-105deg)] z-20 shadow-xl shadow-purple-900/15 group-hover:shadow-2xl group-hover:shadow-purple-900/20">
+                <div className="absolute inset-0 w-full h-full bg-white/60 backdrop-blur-md rounded-3xl border border-sky-200/80 p-6 flex flex-col items-center justify-center text-center origin-left transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] [transform-style:preserve-3d] group-hover:[transform:rotateY(-105deg)] z-20 shadow-xl shadow-sky-900/15 group-hover:shadow-2xl group-hover:shadow-sky-900/25">
 
                   <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-white/60 via-transparent to-transparent rounded-3xl pointer-events-none"></div>
 
-                  <div className="w-16 h-16 flex items-center justify-center bg-gradient-to-tr from-purple-700 to-emerald-500 text-white rounded-2xl mb-5 shadow-lg shadow-purple-500/30">
+                  <div className="w-16 h-16 flex items-center justify-center bg-gradient-to-tr from-sky-500 to-green-500 text-white rounded-2xl mb-5 shadow-lg shadow-sky-500/30">
                     <IconComponent size={30} strokeWidth={2} />
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3 text-purple-950">{service.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 text-sky-950">{service.title}</h3>
 
-                  <div className="flex items-center justify-center gap-1.5 mt-2 text-emerald-600 font-bold uppercase tracking-widest text-[10px] bg-emerald-50/80 px-4 py-1.5 rounded-full border border-emerald-200/60 shadow-sm">
+                  <div className="flex items-center justify-center gap-1.5 mt-2 text-green-600 font-bold uppercase tracking-widest text-[10px] bg-green-50/80 px-4 py-1.5 rounded-full border border-green-200/60 shadow-sm">
                     <span>Explore Inside</span>
                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -173,35 +174,35 @@ export default function Home() {
 
       {/* Login Modal */}
       {isLoginModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-purple-950/50 backdrop-blur-md p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-sky-950/40 backdrop-blur-md p-4">
           <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in-95 duration-300 max-h-[90vh]">
 
             <button
               onClick={() => setIsLoginModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors z-20 bg-white/80 rounded-full p-1.5 md:bg-transparent"
+              className="absolute top-4 right-4 text-gray-400 hover:text-sky-600 hover:bg-sky-50 transition-colors z-20 bg-white/80 rounded-full p-1.5 md:bg-transparent"
             >
               <X size={20} strokeWidth={2.5} />
             </button>
 
             {/* Left Panel — Brand */}
             <div className="hidden md:flex md:w-1/2 relative flex-col justify-between p-10 text-white overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-700 to-emerald-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-700 via-sky-500 to-green-600"></div>
               <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-purple-950/50 via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-green-900/40 via-transparent to-transparent"></div>
 
               <div className="relative z-10 mt-6">
                 <div className="bg-white/20 w-12 h-12 flex items-center justify-center rounded-xl mb-6 backdrop-blur-sm border border-white/30">
                   <Leaf size={24} className="text-white" />
                 </div>
                 <h2 className="text-4xl font-extrabold mb-3 leading-tight text-white">Cultivate <br />Great Talent.</h2>
-                <p className="text-emerald-200 text-base font-medium">Embark on your next great career journey with our smart platform.</p>
+                <p className="text-green-100 text-base font-medium">Embark on your next great career journey with our smart platform.</p>
               </div>
 
               <div className="relative z-10 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 mb-2">
                 <h3 className="font-bold text-lg mb-2 text-white flex items-center gap-2">
                   <Users size={18} /> Discover, Evaluate, Hire
                 </h3>
-                <p className="text-purple-100 text-sm leading-relaxed opacity-90">
+                <p className="text-sky-100 text-sm leading-relaxed opacity-90">
                   Unlock AI-powered screening, exclusive talent insights, and a streamlined hiring experience.
                 </p>
               </div>
@@ -211,18 +212,18 @@ export default function Home() {
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white relative overflow-y-auto">
 
               {/* Role toggle */}
-              <div className="flex bg-purple-50 p-1 rounded-xl mb-8 shrink-0 border border-purple-100">
+              <div className="flex bg-sky-50 p-1 rounded-xl mb-8 shrink-0 border border-sky-100">
                 <button
                   type="button"
                   onClick={() => setLoginType('candidate')}
-                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${loginType === 'candidate' ? 'bg-white text-emerald-600 shadow-sm' : 'text-purple-700/60 hover:text-purple-700'}`}
+                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${loginType === 'candidate' ? 'bg-white text-sky-600 shadow-sm' : 'text-sky-700/60 hover:text-sky-600'}`}
                 >
                   Candidate
                 </button>
                 <button
                   type="button"
                   onClick={() => setLoginType('admin')}
-                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${loginType === 'admin' ? 'bg-white text-emerald-600 shadow-sm' : 'text-purple-700/60 hover:text-purple-700'}`}
+                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${loginType === 'admin' ? 'bg-white text-sky-600 shadow-sm' : 'text-sky-700/60 hover:text-sky-600'}`}
                 >
                   Administrator
                 </button>
@@ -253,7 +254,7 @@ export default function Home() {
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Email Address</label>
                   <input
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-gray-900 font-medium placeholder:text-gray-400 text-sm"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all text-gray-900 font-medium placeholder:text-gray-400 text-sm"
                     type="text"
                     placeholder="Enter your email"
                     value={username}
@@ -264,7 +265,7 @@ export default function Home() {
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Password</label>
                   <input
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-gray-900 font-medium placeholder:text-gray-400 text-sm"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all text-gray-900 font-medium placeholder:text-gray-400 text-sm"
                     type="password"
                     placeholder="••••••••"
                     value={password}
@@ -275,12 +276,12 @@ export default function Home() {
 
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
-                    <input type="checkbox" id="remember" className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
+                    <input type="checkbox" id="remember" className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500" />
                     <label htmlFor="remember" className="text-xs text-gray-500 font-medium cursor-pointer">
                       Remember me
                     </label>
                   </div>
-                  <span className="text-xs font-bold text-emerald-600 hover:text-emerald-700 cursor-pointer">Forgot Password?</span>
+                  <span className="text-xs font-bold text-green-600 hover:text-green-700 cursor-pointer">Forgot Password?</span>
                 </div>
 
                 {error && (
@@ -291,14 +292,14 @@ export default function Home() {
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-4 bg-gradient-to-r from-purple-700 to-emerald-500 hover:from-purple-600 hover:to-emerald-400 text-white font-bold rounded-xl shadow-lg shadow-purple-600/30 transition-all mt-6 disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
+                  className="w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-400 hover:to-green-400 text-white font-bold rounded-xl shadow-lg shadow-sky-500/30 transition-all mt-6 disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
                   disabled={loading}
                 >
                   {loading ? 'Authenticating...' : `Login as ${loginType === 'candidate' ? 'Candidate' : 'Admin'}`}
                 </button>
 
                 <p className="text-center text-sm text-gray-500 font-medium mt-6">
-                  Don't have an account? <span className="text-emerald-600 font-bold hover:underline cursor-pointer">Sign Up</span>
+                  Don't have an account? <span className="text-green-600 font-bold hover:underline cursor-pointer">Sign Up</span>
                 </p>
               </form>
             </div>
