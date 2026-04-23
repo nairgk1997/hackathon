@@ -1,0 +1,231 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Briefcase, Video, Phone, FileText, Code, Globe, Users, X, Leaf, ChevronRight } from 'lucide-react';
+import api from '../api/client';
+
+export default function Home() {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Added specific features to show "more inside" the leaflet
+  const services = [
+    {
+      title: 'AI Video Interviewer',
+      description: 'Conducts, records, proctors, and evaluates in a structured, human-like video interview.',
+      features: ['Real-time proctoring', 'Behavioral analysis', 'Automated scoring'],
+      icon: Video,
+    },
+    {
+      title: 'AI Phone Screener',
+      description: 'Automates candidate screenings, evaluates responses, and provides a score to identify the best fit.',
+      features: ['Natural language processing', 'Voice sentiment analysis', 'Instant shortlisting'],
+      icon: Phone,
+    },
+    {
+      title: 'AI Resume Screener',
+      description: 'Instantly filters, analyzes and ranks resumes with detailed insights against job requirements.',
+      features: ['Contextual keyword matching', 'Skill gap analysis', 'Bias-free filtering'],
+      icon: FileText,
+    },
+    {
+      title: 'AI Coding Interviewer',
+      description: 'Conducts live adaptive coding assessments to evaluate technical skills and real-world problem-solving.',
+      features: ['Live IDE execution', 'Adaptive difficulty', 'Plagiarism detection'],
+      icon: Code,
+    },
+    {
+      title: 'English Proficiency Test',
+      description: 'Assess candidates\' language skills including fluency, grammar, pronunciation, and vocabulary.',
+      features: ['CEFR alignment', 'Pronunciation scoring', 'Fluency assessment'],
+      icon: Globe,
+    },
+    {
+      title: 'Virtual Interview Platform',
+      description: 'AI-powered interview copilot with real-time evaluation, built-in coding IDE, and whiteboard.',
+      features: ['Built-in whiteboard', 'Collaborative coding', 'AI Interview copilot'],
+      icon: Users,
+    },
+  ];
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const { data } = await api.post('/auth/login', { username, password });
+      localStorage.setItem('hire_ai_auth', 'true');
+      localStorage.setItem('hire_ai_role', data.role || 'candidate');
+      setIsLoginModalOpen(false);
+      if (data.role === 'hr_manager') {
+        navigate('/jd');
+      } else {
+        navigate('/assessment');
+      }
+    } catch {
+      setError('Invalid username or password.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-transparent font-sans text-emerald-950 relative overflow-hidden">
+      
+      {/* Decorative subtle background blur/glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-300/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+      {/* Navigation Bar - Completely Transparent */}
+      <nav className="flex items-center justify-between px-8 py-5 bg-transparent sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <div className="bg-emerald-600 p-2 rounded-lg shadow-sm">
+            <Leaf size={24} className="text-white" />
+          </div>
+          <span className="text-xl font-extrabold tracking-tight text-emerald-900">Hire AI</span>
+        </div>
+        <div>
+          <button
+            onClick={() => setIsLoginModalOpen(true)}
+            className="px-6 py-2.5 text-sm font-semibold text-white bg-emerald-900 rounded-full hover:bg-emerald-800 shadow-md hover:shadow-lg transition-all"
+          >
+            Login
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <header className="max-w-4xl mx-auto text-center px-4 pt-24 pb-16 relative z-10">
+        <h1 className="text-5xl font-extrabold tracking-tight text-emerald-950 sm:text-6xl mb-6 leading-tight">
+          AI Recruiting Software <br /> <span className="text-emerald-600 bg-clip-text">for Modern Teams</span>
+        </h1>
+        <p className="text-lg text-emerald-700/80 max-w-2xl mx-auto mb-10 font-medium">
+          Streamline your hiring process with intelligent AI agents. From video interviews to resume screening, cultivate the right talent faster with our automated platform.
+        </p>
+      </header>
+
+      {/* Services Grid Section - 3D Leaflets */}
+      <section className="max-w-7xl mx-auto px-6 pb-32 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-emerald-900">Recruitment Automation Software Suite</h2>
+          <p className="text-emerald-700/70 mt-3 font-medium">Hover over the leaflets to explore what's inside.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              /* Leaflet Container with 3D Perspective */
+              <div key={index} className="group relative h-[340px] w-full [perspective:2000px] z-10 hover:z-50 cursor-pointer">
+                
+                {/* 1. INSIDE LAYER (Revealed on hover) */}
+                <div className="absolute inset-0 w-full h-full bg-white/40 backdrop-blur-xl rounded-2xl border border-emerald-200/50 p-8 flex flex-col justify-center shadow-inner opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  <h3 className="text-xl font-bold text-emerald-900 mb-3 border-b border-emerald-200/60 pb-3">{service.title}</h3>
+                  <p className="text-emerald-800 text-sm font-medium leading-relaxed mb-5">
+                    {service.description}
+                  </p>
+                  <ul className="space-y-2.5">
+                    {service.features.map((feature, i) => (
+                      <li key={i} className="text-sm font-bold text-emerald-700 flex items-center gap-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm"></span> 
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* 2. FRONT COVER LAYER (Swings open horizontally) */}
+                <div className="absolute inset-0 w-full h-full bg-white/10 backdrop-blur-md rounded-2xl border border-emerald-200/30 p-8 flex flex-col items-center justify-center text-center origin-left transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] [transform-style:preserve-3d] group-hover:[transform:rotateY(-110deg)] z-20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-2xl">
+                  
+                  {/* Glass reflection accent */}
+                  <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white/10 to-transparent skew-x-12 translate-x-10"></div>
+
+                  <div className="w-20 h-20 flex items-center justify-center bg-emerald-50/50 text-emerald-600 rounded-2xl mb-8 shadow-sm">
+                    <IconComponent size={40} strokeWidth={1.5} />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-4 text-emerald-900">{service.title}</h3>
+                  
+                  <div className="flex items-center justify-center gap-1 mt-4 text-emerald-600/70 font-semibold uppercase tracking-widest text-xs">
+                    <span>Open Leaflet</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Login Modal Popup */}
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-emerald-950/40 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
+            {/* Close Button */}
+            <button 
+              onClick={() => setIsLoginModalOpen(false)}
+              className="absolute top-4 right-4 text-emerald-600/50 hover:text-emerald-800 transition-colors z-10"
+            >
+              <X size={24} />
+            </button>
+
+            {/* Login Card UI */}
+            <div className="bg-white rounded-3xl shadow-2xl p-8 border border-emerald-50 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-green-400 to-emerald-600"></div>
+
+              <div className="flex flex-col items-center mb-8 mt-2">
+                <div className="bg-emerald-600 p-3 rounded-xl mb-3 shadow-lg shadow-emerald-600/20">
+                  <Briefcase size={28} className="text-white" />
+                </div>
+                <h2 className="text-2xl font-extrabold text-emerald-900">Hire AI</h2>
+                <p className="text-emerald-600/70 text-sm mt-1 font-medium">Sign in to your workspace</p>
+              </div>
+
+              <form onSubmit={handleLoginSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-bold text-emerald-900 mb-1.5">Username</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-xl bg-emerald-50/50 border border-emerald-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-emerald-900 font-medium placeholder:text-emerald-300"
+                    type="text"
+                    placeholder="admin"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-emerald-900 mb-1.5">Password</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-xl bg-emerald-50/50 border border-emerald-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-emerald-900 font-medium placeholder:text-emerald-300"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-3 rounded-xl text-center font-semibold">
+                    {error}
+                  </p>
+                )}
+
+                <button 
+                  type="submit" 
+                  className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition-all mt-4 disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5" 
+                  disabled={loading}
+                >
+                  {loading ? 'Signing in...' : 'Sign in'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
