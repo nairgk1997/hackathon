@@ -1,0 +1,229 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Leaf, Scan, Smartphone, Sprout, Sun, QrCode, Droplets, X, ChevronRight } from 'lucide-react';
+import api from '../api/client';
+
+export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Adapted to showcase the phases of the AR Herb Garden experience
+  const lifecyclePhases = [
+    {
+      title: 'Scan the QR Code',
+      description: 'Receive our premium seeded paper card. Open your smartphone camera and scan the minimalist QR code to begin.',
+      features: ['No app download required', 'Works natively on iOS & Android', 'Recycled cotton paper'],
+      icon: Scan,
+    },
+    {
+      title: 'The Digital Garden',
+      description: 'Watch as a shimmering, light-green augmented reality herb garden grows directly out of the physical card on your screen.',
+      features: ['Immersive 3D graphics', 'Interactive digital leaves', 'Reveals brand messaging'],
+      icon: Smartphone,
+    },
+    {
+      title: 'Tap to Explore',
+      description: 'Interact with the glowing hotspots on the digital leaves to uncover special offers, services, or hidden content.',
+      features: ['Embedded video links', 'Direct CTA buttons', 'Analytics tracking for brands'],
+      icon: QrCode,
+    },
+    {
+      title: 'Plant the Card',
+      description: 'Once the digital experience is complete, the physical journey begins. Bury the seeded card under a thin layer of soil.',
+      features: ['100% biodegradable', 'Embedded Basil & Mint seeds', 'Zero waste product'],
+      icon: Sprout,
+    },
+    {
+      title: 'Water & Nurture',
+      description: 'Keep the soil moist and place the pot in a sunny spot. The paper will compost, and the seeds will begin to germinate.',
+      features: ['Eco-friendly instructions', 'Requires minimal care', 'Sustainable brand connection'],
+      icon: Droplets,
+    },
+    {
+      title: 'Harvest & Enjoy',
+      description: 'Within weeks, enjoy fresh, aromatic herbs in your kitchen. A permanent, living reminder of your brand\'s circular gift.',
+      features: ['Long-lasting brand recall', 'Farm-to-table experience', 'Carbon positive impact'],
+      icon: Sun,
+    },
+  ];
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      // Mocking a client portal login for brands managing their AR campaigns
+      const { data } = await api.post('/auth/login', { email, password });
+      localStorage.setItem('ar_garden_auth', 'true');
+      setIsModalOpen(false);
+      navigate('/campaign-dashboard');
+    } catch {
+      setError('Invalid credentials. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    /* Pale cream background with dark emerald typography */
+    <div className="min-h-screen bg-[#FDFCF8] font-sans text-emerald-950 relative overflow-hidden">
+      
+      {/* Decorative subtle background gradient */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-emerald-100/40 to-transparent rounded-full blur-[100px] pointer-events-none"></div>
+
+      {/* Navigation Bar */}
+      <nav className="flex items-center justify-between px-8 py-6 bg-transparent sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <div className="bg-emerald-950 p-2 rounded-full shadow-sm">
+            <Leaf size={20} className="text-[#FDFCF8]" strokeWidth={1.5} />
+          </div>
+          <span className="text-xl font-semibold tracking-wide text-emerald-950 uppercase">Botanica AR</span>
+        </div>
+        <div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-7 py-2.5 text-sm font-medium text-emerald-950 border border-emerald-950 rounded-full hover:bg-emerald-950 hover:text-[#FDFCF8] transition-all duration-300"
+          >
+            Client Portal
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <header className="max-w-4xl mx-auto text-center px-4 pt-20 pb-16 relative z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-200 bg-emerald-50/50 text-emerald-800 text-xs font-semibold uppercase tracking-widest mb-8">
+          <Sprout size={14} />
+          <span>The Circular Gift</span>
+        </div>
+        <h1 className="text-5xl md:text-6xl font-light tracking-tight text-emerald-950 mb-6 leading-tight">
+          A digital experience. <br />
+          <span className="font-serif italic text-emerald-800">A physical harvest.</span>
+        </h1>
+        <p className="text-lg text-emerald-800/70 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+          Replace the standard leaflet with a dual-purpose seeded card. Scan the code to explore a shimmering Augmented Reality herb garden, then plant the card to grow real mint and basil.
+        </p>
+      </header>
+
+      {/* The Lifecycle Grid Section - 3D Cards */}
+      <section className="max-w-7xl mx-auto px-6 pb-32 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-2xl font-medium text-emerald-950 tracking-wide uppercase">How It Works</h2>
+          <p className="text-emerald-800/60 mt-2 font-light">Hover over the cards to explore the journey.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {lifecyclePhases.map((phase, index) => {
+            const IconComponent = phase.icon;
+            return (
+              /* Card Container with 3D Perspective */
+              <div key={index} className="group relative h-[320px] w-full [perspective:2000px] z-10 hover:z-50 cursor-pointer">
+                
+                {/* 1. INSIDE LAYER (Revealed on hover - The "Digital" content) */}
+                <div className="absolute inset-0 w-full h-full bg-[#F9F8F3] rounded-sm border border-emerald-100 p-8 flex flex-col justify-center shadow-inner opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  <h3 className="text-lg font-semibold text-emerald-950 mb-3 border-b border-emerald-100 pb-3">{phase.title}</h3>
+                  <p className="text-emerald-800/80 text-sm font-light leading-relaxed mb-5">
+                    {phase.description}
+                  </p>
+                  <ul className="space-y-2">
+                    {phase.features.map((feature, i) => (
+                      <li key={i} className="text-xs font-medium text-emerald-800 flex items-center gap-3">
+                        <span className="w-1 h-1 rounded-full bg-emerald-400"></span> 
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* 2. FRONT COVER LAYER (Swings open horizontally - The "Physical" card) */}
+                <div className="absolute inset-0 w-full h-full bg-white rounded-sm border border-emerald-100 p-8 flex flex-col items-center justify-center text-center origin-left transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] [transform-style:preserve-3d] group-hover:[transform:rotateY(-110deg)] z-20 shadow-sm group-hover:shadow-xl">
+                  
+                  {/* Subtle paper texture/grain overlay could go here */}
+                  
+                  <div className="w-16 h-16 flex items-center justify-center bg-emerald-50/50 text-emerald-950 rounded-full mb-6">
+                    <IconComponent size={28} strokeWidth={1} />
+                  </div>
+                  
+                  <h3 className="text-xl font-medium mb-3 text-emerald-950 tracking-wide">{phase.title}</h3>
+                  <span className="text-emerald-950/40 text-xs font-serif italic mb-6">Step 0{index + 1}</span>
+                  
+                  <div className="flex items-center justify-center gap-1 mt-auto text-emerald-800/60 font-semibold uppercase tracking-widest text-[10px]">
+                    <span>Explore</span>
+                    <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Modal Popup (Client Portal) */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-emerald-950/20 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
+            {/* Close Button */}
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 text-emerald-950/40 hover:text-emerald-950 transition-colors z-10"
+            >
+              <X size={20} strokeWidth={1.5} />
+            </button>
+
+            {/* Login Card UI */}
+            <div className="bg-[#FDFCF8] rounded-sm shadow-2xl p-10 border border-emerald-100 relative overflow-hidden">
+              <div className="flex flex-col items-center mb-8 mt-2">
+                <Leaf size={32} className="text-emerald-950 mb-4" strokeWidth={1} />
+                <h2 className="text-2xl font-light tracking-wide text-emerald-950 uppercase">Client Portal</h2>
+                <p className="text-emerald-800/60 text-sm mt-2 font-light text-center">Sign in to manage your AR campaigns and view scan analytics.</p>
+              </div>
+
+              <form onSubmit={handleLoginSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-emerald-950 mb-2">Work Email</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-none bg-white border border-emerald-200 focus:ring-1 focus:ring-emerald-950 focus:border-emerald-950 outline-none transition-all text-emerald-950 font-light placeholder:text-emerald-950/20"
+                    type="email"
+                    placeholder="hello@brand.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-emerald-950 mb-2">Password</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-none bg-white border border-emerald-200 focus:ring-1 focus:ring-emerald-950 focus:border-emerald-950 outline-none transition-all text-emerald-950 font-light placeholder:text-emerald-950/20"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-sm text-red-700 bg-red-50 border border-red-100 px-4 py-3 text-center font-light">
+                    {error}
+                  </p>
+                )}
+
+                <button 
+                  type="submit" 
+                  className="w-full py-3.5 px-4 bg-emerald-950 hover:bg-emerald-900 text-[#FDFCF8] text-sm tracking-widest uppercase font-semibold transition-all mt-4 disabled:opacity-70 disabled:cursor-not-allowed" 
+                  disabled={loading}
+                >
+                  {loading ? 'Authenticating...' : 'Access Dashboard'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
