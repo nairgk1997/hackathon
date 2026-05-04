@@ -2,12 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Mic, MicOff, CheckCircle, AlertCircle, Loader2,
-  Volume2, ArrowLeft, Shield, Clock,
+  Volume2, ArrowLeft, Clock, Leaf,
 } from 'lucide-react'
 import api from '../api/client'
 
 // ---------------------------------------------------------------------------
-// Persona config (Untouched from Code 2)
+// Persona config (from Code 1 - Light Theme & Avatars)
 // ---------------------------------------------------------------------------
 const PERSONAS = {
   Priya: {
@@ -15,10 +15,9 @@ const PERSONAS = {
     role: 'HR Recruiter',
     location: 'Chennai, India',
     avatarGradient: 'from-rose-500 via-pink-500 to-fuchsia-600',
-    ringColor: 'ring-rose-400/60',
-    glowColor: 'shadow-rose-500/40',
-    badgeBg: 'bg-rose-500/15 border-rose-400/30 text-rose-300',
-    pulseColor: 'bg-rose-500/40',
+    avatarBg: 'bg-rose-100',
+    badgeBg: 'bg-rose-50 border-rose-200 text-rose-600',
+    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=PriyaSharma&backgroundColor=fecdd3',
     initial: 'P',
     greeting:
       'Hi! I\'m Priya from HR. Press "Talk" below and say hello whenever you\'re ready.',
@@ -28,10 +27,9 @@ const PERSONAS = {
     role: 'Senior Engineer',
     location: 'Bangalore, India',
     avatarGradient: 'from-blue-500 via-indigo-500 to-violet-600',
-    ringColor: 'ring-blue-400/60',
-    glowColor: 'shadow-blue-500/40',
-    badgeBg: 'bg-blue-500/15 border-blue-400/30 text-blue-300',
-    pulseColor: 'bg-indigo-500/40',
+    avatarBg: 'bg-blue-100',
+    badgeBg: 'bg-blue-50 border-blue-200 text-blue-600',
+    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=ArjunMehta&backgroundColor=bfdbfe',
     initial: 'A',
     greeting:
       'The HR round is complete. Press "Talk" to begin your technical interview.',
@@ -40,18 +38,17 @@ const PERSONAS = {
     name: 'Rajesh Iyer',
     role: 'Head of HR',
     location: 'Mumbai, India',
-    avatarGradient: 'from-slate-500 via-slate-600 to-slate-700',
-    ringColor: 'ring-slate-400/60',
-    glowColor: 'shadow-slate-500/40',
-    badgeBg: 'bg-slate-500/15 border-slate-400/30 text-slate-300',
-    pulseColor: 'bg-slate-500/40',
+    avatarGradient: 'from-sky-500 via-sky-600 to-green-600',
+    avatarBg: 'bg-sky-100',
+    badgeBg: 'bg-sky-50 border-sky-200 text-sky-600',
+    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=RajeshIyer&backgroundColor=bae6fd',
     initial: 'R',
     greeting:
       'Hi, I\'m Rajesh — Head of HR. We\'d like a final conversation before we wrap up. Press "Talk" when you\'re ready.',
   },
 }
 
-// Maps candidate status → persona key
+// Maps candidate status → persona key (Kept Code 2's structure)
 const STATUS_TO_PERSONA = {
   Shortlisted: 'Priya',
   Assessed: 'Arjun',
@@ -71,18 +68,15 @@ const ROUND_LABELS = {
 }
 
 // ---------------------------------------------------------------------------
-// Small reusable pieces
+// Small reusable pieces (Light Theme)
 // ---------------------------------------------------------------------------
 
-function StatusDot({ phase, personaConfig }) {
+function StatusDot({ phase }) {
   const base = 'w-2 h-2 rounded-full inline-block mr-2'
-  if (phase === 'speaking')
-    return <span className={`${base} bg-emerald-400 animate-pulse`} />
-  if (phase === 'processing')
-    return <span className={`${base} bg-amber-400 animate-pulse`} />
-  if (phase === 'recording')
-    return <span className={`${base} bg-red-400 animate-pulse`} />
-  return <span className={`${base} bg-slate-400/60`} />
+  if (phase === 'speaking')   return <span className={`${base} bg-emerald-500 animate-pulse`} />
+  if (phase === 'processing') return <span className={`${base} bg-amber-400 animate-pulse`} />
+  if (phase === 'recording')  return <span className={`${base} bg-red-400 animate-pulse`} />
+  return <span className={`${base} bg-sky-300`} />
 }
 
 function PhaseLabel({ phase, persona }) {
@@ -99,7 +93,6 @@ function PhaseLabel({ phase, persona }) {
   return <span>{map[phase] ?? 'Initialising…'}</span>
 }
 
-// Typing indicator — Swapped to Code 1 styling for the sidebar
 function TypingIndicator({ personaFirstName }) {
   return (
     <div className="space-y-1">
@@ -119,7 +112,6 @@ function TypingIndicator({ personaFirstName }) {
   )
 }
 
-// Animated audio bars shown when the persona is speaking
 function SpeakingWave({ active }) {
   if (!active) return null
   return (
@@ -139,9 +131,9 @@ function SpeakingWave({ active }) {
 }
 
 // ---------------------------------------------------------------------------
-// PersonaCard (Untouched from Code 2)
+// PersonaCard — Light themed
 // ---------------------------------------------------------------------------
-function PersonaCard({ phase, persona, personaConfig, lastReply }) {
+function PersonaCard({ phase, personaConfig, lastReply }) {
   const isSpeaking   = phase === 'speaking'
   const isProcessing = phase === 'processing'
   const isListening  = phase === 'idle'
@@ -168,24 +160,24 @@ function PersonaCard({ phase, persona, personaConfig, lastReply }) {
       ? 'outerRingRecording 1.1s ease-in-out infinite'
       : 'none',
     background: isSpeaking
-      ? 'rgba(99,102,241,0.10)'
+      ? 'rgba(99,102,241,0.08)'
       : isListening
-      ? 'rgba(16,185,129,0.08)'
+      ? 'rgba(16,185,129,0.07)'
       : isRecording
-      ? 'rgba(239,68,68,0.10)'
+      ? 'rgba(239,68,68,0.08)'
       : 'transparent',
   }
 
   const midRingStyle = {
     transition: 'box-shadow 0.4s ease-in-out, opacity 0.4s ease-in-out',
     boxShadow: isSpeaking
-      ? '0 0 0 2px rgba(99,102,241,0.55)'
+      ? '0 0 0 2px rgba(99,102,241,0.4)'
       : isListening
-      ? '0 0 0 2px rgba(16,185,129,0.45)'
+      ? '0 0 0 2px rgba(16,185,129,0.35)'
       : isRecording
-      ? '0 0 0 2px rgba(239,68,68,0.55)'
-      : '0 0 0 1px rgba(148,163,184,0.15)',
-    opacity: (isSpeaking || isListening || isRecording) ? 1 : 0.35,
+      ? '0 0 0 2px rgba(239,68,68,0.4)'
+      : '0 0 0 1px rgba(14,165,233,0.15)',
+    opacity: (isSpeaking || isListening || isRecording) ? 1 : 0.4,
     animation: isSpeaking
       ? 'midRingSpeaking 1.2s ease-in-out infinite'
       : isListening
@@ -194,59 +186,64 @@ function PersonaCard({ phase, persona, personaConfig, lastReply }) {
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-center h-full select-none overflow-hidden rounded-2xl bg-slate-900/80 border border-slate-700/50">
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${personaConfig.avatarGradient} opacity-[0.06] pointer-events-none`}
-      />
+    <div className="relative flex flex-col items-center justify-center h-full select-none overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-sky-200/80 shadow-lg shadow-sky-900/10">
+      {/* Subtle gradient wash */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${personaConfig.avatarGradient} opacity-[0.04] pointer-events-none`} />
 
-      <div
-        className="absolute w-52 h-52 rounded-full pointer-events-none"
-        style={outerRingStyle}
-      />
+      {/* Outer breathing ring */}
+      <div className="absolute w-56 h-56 rounded-3xl pointer-events-none" style={outerRingStyle} />
 
-      <div
-        className="absolute w-36 h-36 rounded-full pointer-events-none"
-        style={midRingStyle}
-      />
+      {/* Mid ring */}
+      <div className="absolute w-44 h-44 rounded-3xl pointer-events-none" style={midRingStyle} />
 
+      {/* Avatar — rounded square cartoon */}
       <div
-        className={`relative z-10 w-28 h-28 rounded-full bg-gradient-to-br ${personaConfig.avatarGradient} flex items-center justify-center shadow-2xl`}
+        className={`relative z-10 w-36 h-36 rounded-3xl overflow-hidden shadow-xl border-2 border-white/80 ${personaConfig.avatarBg}`}
         style={avatarStyle}
       >
-        <span className="text-4xl font-bold text-white">{personaConfig.initial}</span>
+        <img
+          src={personaConfig.avatar}
+          alt={personaConfig.name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none'
+            e.currentTarget.nextSibling.style.display = 'flex'
+          }}
+        />
+        <div className={`hidden absolute inset-0 bg-gradient-to-br ${personaConfig.avatarGradient} items-center justify-center`}>
+          <span className="text-4xl font-bold text-white">{personaConfig.initial}</span>
+        </div>
       </div>
 
+      {/* Name + role */}
       <div className="relative z-10 mt-5 text-center space-y-1">
-        <p className="text-xl font-semibold text-white tracking-tight">{personaConfig.name}</p>
-        <p className="text-sm text-slate-400">{personaConfig.role} · {personaConfig.location}</p>
-        <span
-          className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border mt-2 ${personaConfig.badgeBg}`}
-        >
-          <StatusDot phase={phase} personaConfig={personaConfig} />
+        <p className="text-xl font-bold text-sky-950 tracking-tight">{personaConfig.name}</p>
+        <p className="text-sm text-sky-500">{personaConfig.role} · {personaConfig.location}</p>
+        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border mt-2 ${personaConfig.badgeBg}`}>
+          <StatusDot phase={phase} />
           <PhaseLabel phase={phase} persona={personaConfig.name.split(' ')[0]} />
         </span>
       </div>
 
+      {/* Speaking wave */}
       <div
-        className="relative z-10 mt-4"
-        style={{
-          opacity: isSpeaking ? 1 : 0,
-          transition: 'opacity 0.3s ease-in-out',
-          color: 'rgba(255,255,255,0.8)',
-        }}
+        className="relative z-10 mt-4 text-sky-500"
+        style={{ opacity: isSpeaking ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}
       >
         <SpeakingWave active={isSpeaking} />
       </div>
 
+      {/* Processing spinner */}
       {isProcessing && (
         <div className="relative z-10 mt-4">
-          <Loader2 className="text-amber-400 animate-spin" size={22} />
+          <Loader2 className="text-amber-500 animate-spin" size={22} />
         </div>
       )}
 
+      {/* Last reply bubble */}
       {lastReply && (
-        <div className="relative z-10 mx-6 mt-6 px-4 py-3 bg-slate-800/70 border border-slate-600/40 rounded-xl max-w-xs">
-          <p className="text-sm text-slate-200 leading-relaxed line-clamp-4 italic">
+        <div className="relative z-10 mx-6 mt-6 px-4 py-3 bg-sky-50 border border-sky-200 rounded-xl max-w-xs shadow-sm">
+          <p className="text-sm text-sky-800 leading-relaxed line-clamp-4 italic">
             "{lastReply}"
           </p>
         </div>
@@ -256,7 +253,7 @@ function PersonaCard({ phase, persona, personaConfig, lastReply }) {
 }
 
 // ---------------------------------------------------------------------------
-// CandidateView (Swapped to Code 1 sidebar styling)
+// CandidateView — Light themed
 // ---------------------------------------------------------------------------
 function CandidateView({ videoRef, candidateName, cameraError, isActive }) {
   return (
@@ -297,10 +294,10 @@ function CandidateView({ videoRef, candidateName, cameraError, isActive }) {
 }
 
 // ---------------------------------------------------------------------------
-// TalkButton (Untouched from Code 2)
+// TalkButton — Light themed
 // ---------------------------------------------------------------------------
 function TalkButton({ phase, onToggle }) {
-  const disabled = phase === 'processing' || phase === 'speaking' || phase === 'starting' || phase === 'complete'
+  const disabled    = phase === 'processing' || phase === 'speaking' || phase === 'starting' || phase === 'complete'
   const isRecording = phase === 'recording'
 
   return (
@@ -310,15 +307,15 @@ function TalkButton({ phase, onToggle }) {
         disabled={disabled}
         className={`
           relative w-16 h-16 rounded-full flex items-center justify-center
-          transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50
-          ${disabled ? 'bg-slate-700 cursor-not-allowed opacity-50 grayscale' : ''}
-          ${isRecording ? 'bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/50' : ''}
-          ${!disabled && !isRecording ? 'bg-brand-600 hover:bg-brand-700 shadow-lg shadow-indigo-500/40' : ''}
+          transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50
+          ${disabled    ? 'bg-sky-100 cursor-not-allowed opacity-50' : ''}
+          ${isRecording ? 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-400/40' : ''}
+          ${!disabled && !isRecording ? 'bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-400 hover:to-green-400 shadow-lg shadow-sky-500/35 transform hover:-translate-y-0.5' : ''}
         `}
         aria-label={isRecording ? 'Stop recording' : 'Start recording'}
       >
         {isRecording && (
-          <span className="absolute inset-0 rounded-full bg-red-500/40 animate-ping" />
+          <span className="absolute inset-0 rounded-full bg-red-400/30 animate-ping" />
         )}
         {isRecording ? (
           <div className="w-4 h-4 rounded-sm bg-white" />
@@ -326,7 +323,7 @@ function TalkButton({ phase, onToggle }) {
           <Mic size={24} className="text-white" />
         )}
       </button>
-      <span className="text-xs text-slate-500 font-medium">
+      <span className="text-xs text-sky-500 font-medium">
         {isRecording ? 'Click to stop' : disabled ? '—' : 'Click to Talk'}
       </span>
     </div>
@@ -334,15 +331,18 @@ function TalkButton({ phase, onToggle }) {
 }
 
 // ---------------------------------------------------------------------------
-// ThankYouScreen (Untouched from Code 2)
+// ThankYouScreen — Light themed
 // ---------------------------------------------------------------------------
 function ThankYouScreen({ candidateName, onReturn }) {
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-8">
-      <div className="max-w-lg w-full text-center space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-green-50 flex items-center justify-center p-8 font-sans">
+      <div className="fixed top-0 left-[20%] w-[500px] h-[300px] bg-sky-300/15 rounded-full blur-[100px] pointer-events-none" />
+      <div className="fixed bottom-0 right-[10%] w-[400px] h-[400px] bg-green-300/10 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-lg w-full text-center space-y-6">
         <div className="flex justify-center">
           <div className="relative w-28 h-28 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping" />
+            <div className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
             <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-xl shadow-emerald-500/30">
               <CheckCircle size={40} className="text-white" />
             </div>
@@ -350,23 +350,21 @@ function ThankYouScreen({ candidateName, onReturn }) {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-white tracking-tight">
-            Interview Complete!
-          </h1>
-          <p className="text-slate-400 text-lg">
-            Thank you, <span className="text-white font-medium">{candidateName}</span>.
+          <h1 className="text-3xl font-extrabold text-sky-950 tracking-tight">Interview Complete!</h1>
+          <p className="text-sky-700 text-lg">
+            Thank you, <span className="text-sky-950 font-bold">{candidateName}</span>.
           </p>
         </div>
 
-        <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 text-left space-y-3">
-          <p className="text-sm font-semibold text-slate-300 uppercase tracking-wider">What's next?</p>
+        <div className="bg-white/90 backdrop-blur-sm border border-sky-200 rounded-2xl shadow-lg shadow-sky-900/10 p-6 text-left space-y-3">
+          <p className="text-sm font-bold text-sky-800 uppercase tracking-wider">What's next?</p>
           <ul className="space-y-2">
             {[
               'Our team will review your responses within 24–48 hours.',
               "You'll receive an email update on next steps.",
               'The technical evaluation is now complete.',
             ].map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
+              <li key={i} className="flex items-start gap-2 text-sm text-sky-700">
                 <CheckCircle size={14} className="text-emerald-500 mt-0.5 shrink-0" />
                 {item}
               </li>
@@ -376,7 +374,7 @@ function ThankYouScreen({ candidateName, onReturn }) {
 
         <button
           onClick={onReturn}
-          className="btn-primary px-8 py-3 text-base"
+          className="px-8 py-3 text-base font-bold text-white bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-400 hover:to-green-400 rounded-xl shadow-lg shadow-sky-500/30 transition-all transform hover:-translate-y-0.5"
         >
           Return to Dashboard
         </button>
@@ -386,7 +384,7 @@ function ThankYouScreen({ candidateName, onReturn }) {
 }
 
 // ---------------------------------------------------------------------------
-// Main VideoInterview page
+// Main VideoInterview page (Logic from Code 2, Views from Code 1)
 // ---------------------------------------------------------------------------
 export default function VideoInterview() {
   const navigate = useNavigate()
@@ -458,7 +456,7 @@ export default function VideoInterview() {
     }
   }, [phase === 'idle' || phase === 'recording'])
 
-  // ---- Proctoring (snapshot every 10s) ------------------------------------
+  // ---- Proctoring (snapshot every 30s) ------------------------------------
   useEffect(() => {
     const activePhases = new Set(['idle', 'recording', 'processing', 'speaking'])
     if (!activePhases.has(phase)) return
@@ -668,60 +666,61 @@ export default function VideoInterview() {
   }
 
   // =========================================================================
-  // Render: main interview UI
+  // Render: main interview UI (Light Theme Views)
   // =========================================================================
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col text-white select-none overflow-hidden">
-      {/* Hidden canvas for snapshot capture */}
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-green-50 flex flex-col font-sans select-none overflow-hidden">
+      {/* Ambient glows */}
+      <div className="fixed top-0 left-[20%] w-[600px] h-[300px] bg-sky-300/15 rounded-full blur-[100px] pointer-events-none z-0" />
+      <div className="fixed bottom-0 right-[10%] w-[400px] h-[400px] bg-green-300/10 rounded-full blur-[120px] pointer-events-none z-0" />
+
       <canvas ref={canvasRef} className="hidden" />
 
-      {/* ── Top bar ─────────────────────────────────────────────────────── */}
-      <header className="shrink-0 flex items-center justify-between px-6 py-3 bg-slate-900/80 border-b border-slate-800/60 backdrop-blur-sm">
+      {/* Top bar */}
+      <header className="relative z-10 shrink-0 flex items-center justify-between px-6 py-3 bg-white/80 border-b border-sky-200 backdrop-blur-sm shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center">
-            <Shield size={16} className="text-white" />
+          <div className="bg-gradient-to-tr from-sky-600 to-green-600 p-1.5 rounded-lg shadow-md shadow-sky-500/30 ring-1 ring-sky-400/30">
+            <Leaf size={16} className="text-white drop-shadow-sm" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white leading-tight">Hire AI Interview</p>
-            <p className="text-xs text-slate-500 leading-tight">{roundLabel}</p>
+            <p className="text-sm font-bold text-sky-950 leading-tight">Hire AI Interview</p>
+            <p className="text-xs text-sky-500 leading-tight">{roundLabel}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
-          {/* Live indicator */}
           {(phase !== 'init' && phase !== 'ready') && (
-            <div className="flex items-center gap-1.5 bg-red-500/15 border border-red-500/30 px-3 py-1 rounded-full">
+            <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 px-3 py-1 rounded-full">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-xs font-medium text-red-400">LIVE</span>
+              <span className="text-xs font-bold text-red-500">LIVE</span>
             </div>
           )}
 
-          {/* Timer */}
-          <div className="flex items-center gap-1.5 text-slate-500 text-sm">
+          <div className="flex items-center gap-1.5 text-sky-500 text-sm font-medium">
             <Clock size={13} />
             <span className="tabular-nums">{formatTime(elapsedSecs)}</span>
           </div>
 
-          {/* Turn counter */}
           {turn > 0 && (
-            <span className="text-xs text-slate-600 font-medium">Turn {turn}</span>
+            <span className="text-xs text-sky-400 font-semibold bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full">
+              Turn {turn}
+            </span>
           )}
         </div>
       </header>
 
-      {/* ── Main grid ───────────────────────────────────────────────────── */}
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-5 gap-4 p-4 min-h-0">
-        {/* Persona card — larger tile */}
+      {/* Main grid */}
+      <main className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-5 gap-4 p-4 min-h-0">
+        {/* Persona card */}
         <div className="lg:col-span-3 min-h-[320px]">
           <PersonaCard
             phase={phase}
-            persona={persona}
             personaConfig={personaConfig}
             lastReply={lastReply}
           />
         </div>
 
-        {/* Right column: candidate webcam + transcript log (Swapped to Code 1 sidebar styling) */}
+        {/* Right column */}
         <div className="lg:col-span-2 flex flex-col gap-3 min-h-0">
           {/* Webcam */}
           <div className="shrink-0">
@@ -783,38 +782,36 @@ export default function VideoInterview() {
         </div>
       </main>
 
-      {/* ── Control bar ─────────────────────────────────────────────────── */}
-      <footer className="shrink-0 bg-slate-900/80 border-t border-slate-800/60 backdrop-blur-sm px-6 py-5">
+      {/* Control bar */}
+      <footer className="relative z-10 shrink-0 bg-white/80 border-t border-sky-200 backdrop-blur-sm px-6 py-5 shadow-[0_-4px_16px_rgba(14,165,233,0.06)]">
         <div className="max-w-2xl mx-auto flex flex-col items-center gap-4">
-          {/* Error banner */}
           {error && (
-            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400 text-sm px-4 py-2 rounded-xl w-full">
+            <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-2 rounded-xl w-full font-medium">
               <AlertCircle size={15} className="shrink-0" />
               {error}
             </div>
           )}
 
-          {/* Controls row */}
           <div className="flex items-center gap-8">
-            {/* Back to login */}
+            {/* Leave */}
             <button
               onClick={() => navigate('/candidate-login')}
-              className="flex flex-col items-center gap-1 text-slate-600 hover:text-slate-400 transition-colors"
+              className="flex flex-col items-center gap-1 text-sky-500 hover:text-sky-700 transition-colors"
               title="Leave interview"
             >
-              <div className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors">
+              <div className="w-10 h-10 rounded-full bg-sky-100 hover:bg-sky-200 flex items-center justify-center transition-colors">
                 <ArrowLeft size={18} />
               </div>
-              <span className="text-[10px]">Leave</span>
+              <span className="text-[10px] font-medium">Leave</span>
             </button>
 
-            {/* Start / Talk button */}
+            {/* Start / Talk */}
             {phase === 'ready' || phase === 'init' ? (
               <div className="flex flex-col items-center gap-2">
                 <button
                   onClick={startInterview}
                   disabled={phase === 'init' || phase === 'starting'}
-                  className="relative w-16 h-16 rounded-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg shadow-emerald-500/30 transition-colors"
+                  className="relative w-16 h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg shadow-emerald-400/30 transition-all transform hover:-translate-y-0.5"
                 >
                   {phase === 'starting' ? (
                     <Loader2 size={24} className="animate-spin text-white" />
@@ -822,40 +819,36 @@ export default function VideoInterview() {
                     <Mic size={24} className="text-white" />
                   )}
                 </button>
-                <span className="text-xs text-slate-500 font-medium">Start Interview</span>
+                <span className="text-xs text-sky-500 font-medium">Start Interview</span>
               </div>
             ) : (
               <TalkButton phase={phase} onToggle={toggleTalk} />
             )}
 
-            {/* Volume indicator */}
+            {/* Volume */}
             <div className="flex flex-col items-center gap-1">
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                  phase === 'speaking'
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : 'bg-slate-800 text-slate-600'
-                }`}
-              >
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                phase === 'speaking'
+                  ? 'bg-emerald-100 text-emerald-600'
+                  : 'bg-sky-100 text-sky-400'
+              }`}>
                 <Volume2 size={18} />
               </div>
-              <span className="text-[10px] text-slate-600">Audio</span>
+              <span className="text-[10px] text-sky-400 font-medium">Audio</span>
             </div>
           </div>
 
-          {/* Instruction hint */}
-          <p className="text-xs text-slate-700">
-            {phase === 'idle' && 'Press Talk when you\'re ready to respond. Click again to send.'}
-            {phase === 'recording' && 'Speaking… click the button again to finish your answer.'}
+          <p className="text-xs text-sky-400 font-medium">
+            {phase === 'idle'       && 'Press Talk when you\'re ready to respond. Click again to send.'}
+            {phase === 'recording'  && 'Speaking… click the button again to finish your answer.'}
             {phase === 'processing' && `${personaConfig.name.split(' ')[0]} is preparing a response…`}
-            {phase === 'speaking' && 'Please listen. You can respond once the audio finishes.'}
-            {phase === 'ready' && 'Camera ready. Click "Start Interview" to begin.'}
+            {phase === 'speaking'   && 'Please listen. You can respond once the audio finishes.'}
+            {phase === 'ready'      && 'Camera ready. Click "Start Interview" to begin.'}
             {(phase === 'init' || phase === 'starting') && 'Setting up your interview session…'}
           </p>
         </div>
       </footer>
 
-      {/* Keyframe injection */}
       <style>{`
         @keyframes speakBar {
           from { transform: scaleY(0.3); opacity: 0.5; }
@@ -865,36 +858,30 @@ export default function VideoInterview() {
           0%, 60%, 100% { transform: translateY(0);    opacity: 0.4; }
           30%            { transform: translateY(-5px); opacity: 1;   }
         }
-
-        /* ── Avatar glow animations ────────────────────────────── */
         @keyframes listeningGlow {
           0%, 100% { box-shadow: 0 0 8px 2px rgba(16,185,129,0.10), 0 0 0 0 rgba(16,185,129,0); }
-          50%       { box-shadow: 0 0 22px 8px rgba(16,185,129,0.28), 0 0 0 14px rgba(16,185,129,0.07); }
+          50%       { box-shadow: 0 0 22px 8px rgba(16,185,129,0.25), 0 0 0 14px rgba(16,185,129,0.06); }
         }
         @keyframes recordingGlow {
-          0%, 100% { box-shadow: 0 0 8px 2px rgba(239,68,68,0.15),  0 0 0 0 rgba(239,68,68,0); }
-          50%       { box-shadow: 0 0 22px 8px rgba(239,68,68,0.35), 0 0 0 12px rgba(239,68,68,0.08); }
+          0%, 100% { box-shadow: 0 0 8px 2px rgba(239,68,68,0.15), 0 0 0 0 rgba(239,68,68,0); }
+          50%       { box-shadow: 0 0 22px 8px rgba(239,68,68,0.30), 0 0 0 12px rgba(239,68,68,0.07); }
         }
         @keyframes speakingGlow {
-          0%, 100% { box-shadow: 0 0 10px 4px rgba(99,102,241,0.15),  0 0 0 0 rgba(99,102,241,0); }
-          50%       { box-shadow: 0 0 30px 10px rgba(99,102,241,0.35), 0 0 0 18px rgba(99,102,241,0.08); }
+          0%, 100% { box-shadow: 0 0 10px 4px rgba(99,102,241,0.12), 0 0 0 0 rgba(99,102,241,0); }
+          50%       { box-shadow: 0 0 28px 10px rgba(99,102,241,0.28), 0 0 0 18px rgba(99,102,241,0.06); }
         }
-
-        /* ── Outer ring animations ──────────────────────────────── */
         @keyframes outerRingListening {
           0%, 100% { transform: scale(0.92); opacity: 0;   }
-          50%       { transform: scale(1.06); opacity: 0.7; }
+          50%       { transform: scale(1.06); opacity: 0.6; }
         }
         @keyframes outerRingRecording {
           0%, 100% { transform: scale(0.95); opacity: 0;   }
-          50%       { transform: scale(1.08); opacity: 0.8; }
+          50%       { transform: scale(1.08); opacity: 0.7; }
         }
         @keyframes outerRingSpeaking {
           0%, 100% { transform: scale(0.90); opacity: 0;   }
-          50%       { transform: scale(1.10); opacity: 0.6; }
+          50%       { transform: scale(1.10); opacity: 0.5; }
         }
-
-        /* ── Mid ring animations ────────────────────────────────── */
         @keyframes midRingListening {
           0%, 100% { transform: scale(1);    }
           50%       { transform: scale(1.05); }
