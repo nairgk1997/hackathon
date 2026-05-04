@@ -9,6 +9,9 @@ import api from '../api/client'
 // ---------------------------------------------------------------------------
 // Persona config (from Code 1 - Light Theme & Avatars)
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Persona config
+// ---------------------------------------------------------------------------
 const PERSONAS = {
   Priya: {
     name: 'Priya Sharma',
@@ -17,7 +20,9 @@ const PERSONAS = {
     avatarGradient: 'from-rose-500 via-pink-500 to-fuchsia-600',
     avatarBg: 'bg-rose-100',
     badgeBg: 'bg-rose-50 border-rose-200 text-rose-600',
-    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=PriyaSharma&backgroundColor=fecdd3',
+    // Note: Absolute local paths will likely be blocked by your browser. 
+    // Consider moving this image to your React 'public' folder.
+    avatar: '/Users/gokulnair444/Documents/aiimages/Priya.png',
     initial: 'P',
     greeting:
       'Hi! I\'m Priya from HR. Press "Talk" below and say hello whenever you\'re ready.',
@@ -29,7 +34,7 @@ const PERSONAS = {
     avatarGradient: 'from-blue-500 via-indigo-500 to-violet-600',
     avatarBg: 'bg-blue-100',
     badgeBg: 'bg-blue-50 border-blue-200 text-blue-600',
-    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=ArjunMehta&backgroundColor=bfdbfe',
+    avatar: '/Users/gokulnair444/Documents/aiimages/Arjun.png',
     initial: 'A',
     greeting:
       'The HR round is complete. Press "Talk" to begin your technical interview.',
@@ -41,7 +46,7 @@ const PERSONAS = {
     avatarGradient: 'from-sky-500 via-sky-600 to-green-600',
     avatarBg: 'bg-sky-100',
     badgeBg: 'bg-sky-50 border-sky-200 text-sky-600',
-    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=RajeshIyer&backgroundColor=bae6fd',
+    avatar: '/Users/gokulnair444/Documents/aiimages/Rajesh.png',
     initial: 'R',
     greeting:
       'Hi, I\'m Rajesh — Head of HR. We\'d like a final conversation before we wrap up. Press "Talk" when you\'re ready.',
